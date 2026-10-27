@@ -1,6 +1,6 @@
 const db = require('../config/db');
+const { validateId } = require('../utils/validators');
 
-// Allowed sort columns for public / user store listings
 const STORE_SORT_KEYS = {
   name: 's.name',
   address: 's.address',
@@ -8,7 +8,6 @@ const STORE_SORT_KEYS = {
   created_at: 's.created_at',
 };
 
-// Retrieve stores catalog with overall ratings and user's own rating if authenticated
 async function getStoresForUsers(req, res, next) {
   try {
     const {
@@ -34,7 +33,6 @@ async function getStoresForUsers(req, res, next) {
     const params = [];
     let idx = 1;
 
-    // Search query matches name or address (partial match)
     if (search) {
       conditions.push(`(s.name ILIKE $${idx} OR s.address ILIKE $${idx})`);
       params.push(`%${search}%`);
@@ -57,7 +55,6 @@ async function getStoresForUsers(req, res, next) {
     const countRes = await db.query(countSql, params);
     const totalRecords = countRes.rows[0].total;
 
-    // Calculate overall average rating and extract the viewer's personal submitted rating
     const querySql = `
       SELECT 
         s.id,
@@ -91,10 +88,14 @@ async function getStoresForUsers(req, res, next) {
   }
 }
 
-// Fetch single store details
 async function getStoreById(req, res, next) {
   try {
     const { id } = req.params;
+    const idCheck = validateId(id, 'Store ID');
+    if (!idCheck.valid) {
+      return res.status(400).json({ success: false, message: idCheck.message });
+    }
+
     const currentUserId = req.user ? req.user.id : null;
 
     const querySql = `
@@ -112,7 +113,7 @@ async function getStoreById(req, res, next) {
       GROUP BY s.id
     `;
 
-    const { rows } = await db.query(querySql, [currentUserId, id]);
+    const { rows } = await db.query(querySql, [currentUserId, idCheck.value]);
     if (rows.length === 0) {
       return res.status(404).json({ success: false, message: 'Store not found.' });
     }

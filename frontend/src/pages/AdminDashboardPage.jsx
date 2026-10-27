@@ -22,11 +22,9 @@ import {
 } from 'lucide-react';
 
 export default function AdminDashboardPage({ activeTab = 'overview', setActiveTab }) {
-  // Statistics State
   const [stats, setStats] = useState(null);
   const [loadingStats, setLoadingStats] = useState(true);
 
-  // Stores Table State
   const [stores, setStores] = useState([]);
   const [loadingStores, setLoadingStores] = useState(false);
   const [storeFilterName, setStoreFilterName] = useState('');
@@ -37,7 +35,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
   const [storePage, setStorePage] = useState(1);
   const [storePagination, setStorePagination] = useState({ totalPages: 1, totalRecords: 0 });
 
-  // Users Table State
   const [users, setUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [userFilterName, setUserFilterName] = useState('');
@@ -49,13 +46,11 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
   const [userPage, setUserPage] = useState(1);
   const [userPagination, setUserPagination] = useState({ totalPages: 1, totalRecords: 0 });
 
-  // Modals State
   const [isCreateStoreOpen, setIsCreateStoreOpen] = useState(false);
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
   const [selectedUserIdForDetails, setSelectedUserIdForDetails] = useState(null);
   const [isUserDetailsOpen, setIsUserDetailsOpen] = useState(false);
 
-  // 1. Fetch Stats
   const fetchStats = useCallback(async () => {
     setLoadingStats(true);
     try {
@@ -70,7 +65,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
     }
   }, []);
 
-  // 2. Fetch Stores
   const fetchStores = useCallback(async () => {
     setLoadingStores(true);
     try {
@@ -95,7 +89,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
     }
   }, [storeFilterName, storeFilterEmail, storeFilterAddress, storeSortBy, storeSortOrder, storePage]);
 
-  // 3. Fetch Users
   const fetchUsers = useCallback(async () => {
     setLoadingUsers(true);
     try {
@@ -144,22 +137,21 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
 
   return (
     <div>
-      {/* Top Banner */}
       <div
+        className="page-header-banner"
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '1rem',
-          marginBottom: '2rem',
         }}
       >
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.25rem 0.75rem', borderRadius: '999px', background: 'rgba(139, 92, 246, 0.2)', color: '#c4b5fd', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.5rem' }}>
-            <ShieldCheck size={14} /> Administrator Portal
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.2rem 0.65rem', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--bg-subtle)', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, border: '1px solid var(--border-color)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <ShieldCheck size={13} /> Administrator Portal
           </div>
-          <h1 style={{ fontSize: '2rem' }}>Admin Dashboard</h1>
+          <h1 style={{ fontSize: '1.75rem', color: 'var(--text-main)' }}>Platform Administration</h1>
         </div>
 
         <div style={{ display: 'flex', gap: '0.75rem' }}>
@@ -168,25 +160,23 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
             onClick={() => setIsCreateUserOpen(true)}
             style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
           >
-            <Plus size={16} /> Add User
+            <Plus size={15} /> Add User
           </button>
           <button
             className="btn btn-primary btn-sm"
             onClick={() => setIsCreateStoreOpen(true)}
             style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
           >
-            <Plus size={16} /> Add Store
+            <Plus size={15} /> Add Store
           </button>
         </div>
       </div>
 
-      {/* Platform Statistics Cards */}
-      <div className="grid-cols-3" style={{ marginBottom: '2rem' }}>
-        {/* Total Users Stat */}
-        <div className="stat-card" style={{ '--stat-glow': 'rgba(139, 92, 246, 0.3)', '--stat-color': '#a78bfa' }}>
+      <div className="grid-cols-3" style={{ marginBottom: '1.75rem' }}>
+        <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-title">Total Platform Users</span>
-            <div className="stat-icon"><Users size={20} /></div>
+            <span className="stat-title">Total Registered Users</span>
+            <div className="stat-icon"><Users size={18} /></div>
           </div>
           <div className="stat-number">{stats ? stats.totalUsers : '...'}</div>
           {stats && (
@@ -198,28 +188,25 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
           )}
         </div>
 
-        {/* Total Stores Stat */}
-        <div className="stat-card" style={{ '--stat-glow': 'rgba(6, 182, 212, 0.3)', '--stat-color': '#38bdf8' }}>
+        <div className="stat-card">
           <div className="stat-header">
             <span className="stat-title">Registered Stores</span>
-            <div className="stat-icon"><Store size={20} /></div>
+            <div className="stat-icon"><Store size={18} /></div>
           </div>
           <div className="stat-number">{stats ? stats.totalStores : '...'}</div>
-          <div className="stat-subtext">Active retail storefronts on platform</div>
+          <div className="stat-subtext">Active store locations in catalog</div>
         </div>
 
-        {/* Total Ratings Stat */}
-        <div className="stat-card" style={{ '--stat-glow': 'rgba(245, 158, 11, 0.3)', '--stat-color': '#fbbf24' }}>
+        <div className="stat-card">
           <div className="stat-header">
             <span className="stat-title">Customer Ratings</span>
-            <div className="stat-icon"><Star size={20} /></div>
+            <div className="stat-icon"><Star size={18} /></div>
           </div>
           <div className="stat-number">{stats ? stats.totalRatings : '...'}</div>
-          <div className="stat-subtext">Total verified consumer evaluations</div>
+          <div className="stat-subtext">Verified customer ratings submitted</div>
         </div>
       </div>
 
-      {/* Tabs */}
       <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '1px solid var(--border-color)', marginBottom: '1.5rem' }}>
         <button
           className={`nav-link ${activeTab === 'overview' ? 'active' : ''}`}
@@ -244,7 +231,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
         </button>
       </div>
 
-      {/* Stores Directory Section */}
       {(activeTab === 'stores' || activeTab === 'overview') && (
         <div style={{ marginBottom: '3rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -256,7 +242,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
             </button>
           </div>
 
-          {/* Filters for Stores */}
           <div className="card" style={{ padding: '1rem', marginBottom: '1rem' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', alignItems: 'center' }}>
               <div>
@@ -315,7 +300,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
             </div>
           </div>
 
-          {/* Stores Table */}
           <div className="table-responsive">
             <table className="data-table">
               <thead>
@@ -351,27 +335,27 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
                 ) : (
                   stores.map((s) => (
                     <tr key={s.id}>
-                      <td style={{ fontWeight: 600, color: '#ffffff' }}>{s.name}</td>
-                      <td style={{ color: '#9ca3af', fontSize: '0.875rem' }}>{s.email}</td>
-                      <td style={{ color: '#d1d5db', fontSize: '0.875rem', maxWidth: '300px' }}>{s.address}</td>
+                      <td style={{ fontWeight: 600, color: 'var(--text-main)' }}>{s.name}</td>
+                      <td style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{s.email}</td>
+                      <td style={{ color: 'var(--text-main)', fontSize: '0.875rem', maxWidth: '300px' }}>{s.address}</td>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                           <StarRating value={s.overall_rating} readOnly={true} size={15} />
-                          <span style={{ fontWeight: 700, color: '#f59e0b' }}>
+                          <span style={{ fontWeight: 700, color: '#b45309' }}>
                             {Number(s.overall_rating) > 0 ? Number(s.overall_rating).toFixed(2) : '0.00'}
                           </span>
-                          <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
                             ({s.rating_count})
                           </span>
                         </div>
                       </td>
                       <td>
                         {s.owner_name ? (
-                          <span style={{ color: '#67e8f9', fontSize: '0.85rem' }}>
+                          <span style={{ color: 'var(--accent)', fontSize: '0.85rem', fontWeight: 500 }}>
                             {s.owner_name}
                           </span>
                         ) : (
-                          <span style={{ color: '#6b7280', fontSize: '0.8rem', fontStyle: 'italic' }}>
+                          <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem', fontStyle: 'italic' }}>
                             Unassigned
                           </span>
                         )}
@@ -383,7 +367,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
             </table>
           </div>
 
-          {/* Stores Pagination */}
           {storePagination.totalPages > 1 && (
             <div className="pagination-wrap">
               <div className="pagination-info">
@@ -410,7 +393,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
         </div>
       )}
 
-      {/* Users Directory Section */}
       {(activeTab === 'users' || activeTab === 'overview') && (
         <div style={{ marginBottom: '2rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -422,7 +404,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
             </button>
           </div>
 
-          {/* Filters for Users */}
           <div className="card" style={{ padding: '1rem', marginBottom: '1rem' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem', alignItems: 'center' }}>
               <div>
@@ -495,7 +476,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
             </div>
           </div>
 
-          {/* Users Table */}
           <div className="table-responsive">
             <table className="data-table">
               <thead>
@@ -535,9 +515,9 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
                       onClick={() => handleOpenUserDetails(u.id)}
                       style={{ cursor: 'pointer' }}
                     >
-                      <td style={{ fontWeight: 600, color: '#ffffff' }}>{u.name}</td>
-                      <td style={{ color: '#9ca3af', fontSize: '0.875rem' }}>{u.email}</td>
-                      <td style={{ color: '#d1d5db', fontSize: '0.875rem', maxWidth: '300px' }}>{u.address}</td>
+                      <td style={{ fontWeight: 600, color: 'var(--text-main)' }}>{u.name}</td>
+                      <td style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{u.email}</td>
+                      <td style={{ color: 'var(--text-main)', fontSize: '0.875rem', maxWidth: '300px' }}>{u.address}</td>
                       <td>
                         {u.role === 'ADMIN' && <span className="badge badge-admin">Admin</span>}
                         {u.role === 'STORE_OWNER' && <span className="badge badge-owner">Store Owner</span>}
@@ -563,7 +543,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
             </table>
           </div>
 
-          {/* Users Pagination */}
           {userPagination.totalPages > 1 && (
             <div className="pagination-wrap">
               <div className="pagination-info">
@@ -590,7 +569,6 @@ export default function AdminDashboardPage({ activeTab = 'overview', setActiveTa
         </div>
       )}
 
-      {/* Admin Modals */}
       <CreateStoreModal
         isOpen={isCreateStoreOpen}
         onClose={() => setIsCreateStoreOpen(false)}

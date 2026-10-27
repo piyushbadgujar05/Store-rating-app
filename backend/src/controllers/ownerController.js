@@ -1,6 +1,6 @@
 const db = require('../config/db');
+const { validateId } = require('../utils/validators');
 
-// Safe sort fields for customer evaluations table
 const RATING_SORT_FIELDS = {
   user_name: 'u.name',
   user_email: 'u.email',
@@ -9,7 +9,6 @@ const RATING_SORT_FIELDS = {
   updated_at: 'r.updated_at',
 };
 
-// Retrieve stores belonging to the logged-in store owner
 async function getOwnerStores(req, res, next) {
   try {
     const ownerId = req.user.id;
@@ -41,11 +40,16 @@ async function getOwnerStores(req, res, next) {
   }
 }
 
-// Retrieve ratings submitted for a specific store owned by this user
 async function getStoreRatings(req, res, next) {
   try {
     const ownerId = req.user.id;
     const { storeId } = req.params;
+
+    const idCheck = validateId(storeId, 'Store ID');
+    if (!idCheck.valid) {
+      return res.status(400).json({ success: false, message: idCheck.message });
+    }
+
     const {
       sortBy = 'updated_at',
       sortOrder = 'desc',
@@ -53,10 +57,9 @@ async function getStoreRatings(req, res, next) {
       limit = 20,
     } = req.query;
 
-    // Security check: ensure the current store owner owns this store
     const { rows: storeRows } = await db.query(
       'SELECT id, name, email, address FROM stores WHERE id = $1 AND owner_id = $2',
-      [storeId, ownerId]
+      [idCheck.value, ownerId]
     );
 
     if (storeRows.length === 0) {
@@ -75,12 +78,10 @@ async function getStoreRatings(req, res, next) {
     const sortCol = RATING_SORT_FIELDS[sortBy] || 'r.updated_at';
     const sortDir = String(sortOrder).toLowerCase() === 'asc' ? 'ASC' : 'DESC';
 
-    // Count ratings for pagination
     const countSql = 'SELECT COUNT(*)::int AS total FROM ratings WHERE store_id = $1';
-    const countRes = await db.query(countSql, [storeId]);
+    const countRes = await db.query(countSql, [idCheck.value]);
     const totalRecords = countRes.rows[0].total;
 
-    // Fetch user ratings without sensitive fields like password hashes
     const ratingsSql = `
       SELECT 
         r.id AS rating_id,
@@ -97,12 +98,11 @@ async function getStoreRatings(req, res, next) {
       LIMIT $2 OFFSET $3
     `;
 
-    const { rows: ratings } = await db.query(ratingsSql, [storeId, limitNum, offset]);
+    const { rows: ratings } = await db.query(ratingsSql, [idCheck.value, limitNum, offset]);
 
-    // Compute store overall average
     const avgRes = await db.query(
       'SELECT COALESCE(ROUND(AVG(rating)::numeric, 2), 0)::float AS avg_rating FROM ratings WHERE store_id = $1',
-      [storeId]
+      [idCheck.value]
     );
 
     res.status(200).json({

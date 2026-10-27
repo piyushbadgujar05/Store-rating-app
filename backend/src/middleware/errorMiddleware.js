@@ -1,14 +1,9 @@
-// Centralized Express error handler
-
 function errorHandler(err, req, res, next) {
-  // Log server errors for debugging during development
   if (process.env.NODE_ENV !== 'test') {
     console.error(`[Error] ${req.method} ${req.originalUrl}:`, err.message || err);
   }
 
-  // Handle common Postgres errors cleanly
   if (err.code === '23505') {
-    // Unique violation
     if (err.constraint && err.constraint.includes('email')) {
       return res.status(409).json({
         success: false,
@@ -28,7 +23,6 @@ function errorHandler(err, req, res, next) {
   }
 
   if (err.code === '23514') {
-    // Check constraint failed
     return res.status(400).json({
       success: false,
       message: 'The submitted data does not meet database constraints.',
@@ -36,10 +30,16 @@ function errorHandler(err, req, res, next) {
   }
 
   if (err.code === '23503') {
-    // Foreign key violation
     return res.status(400).json({
       success: false,
       message: 'Referenced record was not found.',
+    });
+  }
+
+  if (err.code === '22P02') {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid input format. Expected numeric identifier.',
     });
   }
 

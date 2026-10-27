@@ -18,7 +18,6 @@ export default function Navbar({ currentView, setCurrentView, onOpenChangePasswo
   return (
     <nav className="navbar" role="navigation" aria-label="Main Navigation">
       <div className="nav-inner">
-        {/* Brand Logo */}
         <div 
           className="brand-logo" 
           onClick={() => setCurrentView(isAdmin ? 'admin-dashboard' : isStoreOwner ? 'owner-dashboard' : 'stores')}
@@ -30,7 +29,6 @@ export default function Navbar({ currentView, setCurrentView, onOpenChangePasswo
           <span>Store Ratings</span>
         </div>
 
-        {/* Dynamic Navigation Links based on role */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           {isAdmin && (
             <>
@@ -84,7 +82,6 @@ export default function Navbar({ currentView, setCurrentView, onOpenChangePasswo
           )}
         </div>
 
-        {/* User Account Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>

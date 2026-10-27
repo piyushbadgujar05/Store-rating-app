@@ -20,7 +20,6 @@ export default function LoginPage({ setCurrentView }) {
       const res = await login(email.trim(), password);
       showToast(res.message || 'Logged in successfully!', 'success');
 
-      // Redirect to appropriate dashboard based on assigned role
       if (res.user.role === 'ADMIN') {
         setCurrentView('admin-dashboard');
       } else if (res.user.role === 'STORE_OWNER') {
@@ -35,7 +34,6 @@ export default function LoginPage({ setCurrentView }) {
     }
   };
 
-  // Demo Quick-Fill Helpers
   const fillCredentials = (demoEmail, demoPassword) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
@@ -47,23 +45,22 @@ export default function LoginPage({ setCurrentView }) {
         <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div
             style={{
-              width: '52px',
-              height: '52px',
-              borderRadius: '14px',
-              background: 'var(--primary-gradient)',
+              width: '48px',
+              height: '48px',
+              borderRadius: '8px',
+              backgroundColor: 'var(--primary)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#ffffff',
               margin: '0 auto 1rem',
-              boxShadow: '0 4px 16px var(--primary-glow)',
             }}
           >
-            <LogIn size={26} />
+            <LogIn size={24} />
           </div>
-          <h2 style={{ fontSize: '1.65rem', marginBottom: '0.35rem' }}>Welcome Back</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-            Sign in to access your dashboard and reviews
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.35rem', color: 'var(--text-main)' }}>Sign In</h2>
+          <p style={{ color: 'var(--text-dim)', fontSize: '0.875rem' }}>
+            Access the store rating management platform
           </p>
         </div>
 
@@ -75,13 +72,13 @@ export default function LoginPage({ setCurrentView }) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@domain.com"
+                placeholder="user@example.com"
                 required
                 style={{ paddingLeft: '2.3rem' }}
               />
               <Mail
                 size={16}
-                style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}
+                style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
               />
             </div>
           </div>
@@ -99,7 +96,7 @@ export default function LoginPage({ setCurrentView }) {
               />
               <KeyRound
                 size={16}
-                style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}
+                style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
               />
             </div>
           </div>
@@ -108,64 +105,63 @@ export default function LoginPage({ setCurrentView }) {
             type="submit"
             className="btn btn-primary"
             disabled={loading}
-            style={{ width: '100%', marginTop: '0.5rem', padding: '0.75rem' }}
+            style={{ width: '100%', marginTop: '0.75rem', padding: '0.65rem' }}
           >
-            <LogIn size={18} />
+            <LogIn size={16} />
             <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
           </button>
         </form>
 
-        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: '#9ca3af' }}>
+        <div style={{ marginTop: '1.25rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
           Don't have a customer account?{' '}
           <button
             onClick={() => setCurrentView('register')}
-            style={{ background: 'none', border: 'none', color: '#818cf8', fontWeight: 600, cursor: 'pointer' }}
+            style={{ background: 'none', border: 'none', color: 'var(--accent)', fontWeight: 600, cursor: 'pointer' }}
           >
             Register here
           </button>
         </div>
 
-        {/* Quick Demo Role Fill Section */}
         <div
           style={{
-            marginTop: '2rem',
+            marginTop: '1.75rem',
             paddingTop: '1.25rem',
             borderTop: '1px solid var(--border-color)',
           }}
         >
-          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#9ca3af', marginBottom: '0.75rem', textAlign: 'center' }}>
-            Quick fill for testing:
+          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-dim)', marginBottom: '0.75rem', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Test Accounts:
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
             <button
               type="button"
               className="btn btn-secondary btn-sm"
-              onClick={() => fillCredentials('admin@platform.com', 'AdminPassword123!')}
-              title="Autofill System Administrator"
-              style={{ fontSize: '0.75rem', padding: '0.4rem 0.2rem', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}
+              onClick={() => fillCredentials('rahul.verma@example.com', 'AdminPassword123!')}
+              title="Fill Admin Credentials"
+              style={{ fontSize: '0.75rem', padding: '0.45rem 0.25rem', display: 'flex', flexDirection: 'column', gap: '0.2rem', alignItems: 'center' }}
             >
-              <Shield size={14} color="#a78bfa" />
-              <span>Admin</span>
+              <Shield size={14} color="#334155" />
+              <span style={{ fontWeight: 600 }}>Rahul (Admin)</span>
             </button>
             <button
               type="button"
               className="btn btn-secondary btn-sm"
-              onClick={() => fillCredentials('owner@applecentral.com', 'OwnerPassword123!')}
-              title="Autofill Store Owner"
-              style={{ fontSize: '0.75rem', padding: '0.4rem 0.2rem', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}
+              onClick={() => fillCredentials('rohan.patil@example.com', 'OwnerPassword123!')}
+              title="Fill Owner Credentials"
+              style={{ fontSize: '0.75rem', padding: '0.45rem 0.25rem', display: 'flex', flexDirection: 'column', gap: '0.2rem', alignItems: 'center' }}
             >
-              <Store size={14} color="#38bdf8" />
-              <span>Owner</span>
+              <Store size={14} color="#2563eb" />
+              <span style={{ fontWeight: 600 }}>Rohan (Owner)</span>
             </button>
             <button
               type="button"
               className="btn btn-secondary btn-sm"
-              onClick={() => fillCredentials('user1@example.com', 'UserPassword123!')}
-              title="Autofill Normal User"
-              style={{ fontSize: '0.75rem', padding: '0.4rem 0.2rem', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}
+              onClick={() => fillCredentials('aarav.sharma@example.com', 'UserPassword123!')}
+              title="Fill User Credentials"
+              style={{ fontSize: '0.75rem', padding: '0.45rem 0.25rem', display: 'flex', flexDirection: 'column', gap: '0.2rem', alignItems: 'center' }}
             >
-              <UserCheck size={14} color="#34d399" />
-              <span>User</span>
+              <UserCheck size={14} color="#15803d" />
+              <span style={{ fontWeight: 600 }}>Aarav (User)</span>
             </button>
           </div>
         </div>

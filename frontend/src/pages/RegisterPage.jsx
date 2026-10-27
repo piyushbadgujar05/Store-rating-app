@@ -17,7 +17,6 @@ export default function RegisterPage({ setCurrentView }) {
   const trimmedAddress = address.trim();
   const trimmedEmail = email.trim();
 
-  // Validation rules
   const isNameValid = trimmedName.length >= 20 && trimmedName.length <= 60;
   const isAddressValid = trimmedAddress.length > 0 && trimmedAddress.length <= 400;
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail);
@@ -57,23 +56,22 @@ export default function RegisterPage({ setCurrentView }) {
         <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div
             style={{
-              width: '52px',
-              height: '52px',
-              borderRadius: '14px',
-              background: 'var(--primary-gradient)',
+              width: '48px',
+              height: '48px',
+              borderRadius: '8px',
+              backgroundColor: 'var(--primary)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#ffffff',
               margin: '0 auto 1rem',
-              boxShadow: '0 4px 16px var(--primary-glow)',
             }}
           >
-            <UserPlus size={26} />
+            <UserPlus size={24} />
           </div>
-          <h2 style={{ fontSize: '1.65rem', marginBottom: '0.35rem' }}>Create User Account</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-            Sign up to rate stores and share your feedback
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.35rem', color: 'var(--text-main)' }}>Create User Account</h2>
+          <p style={{ color: 'var(--text-dim)', fontSize: '0.875rem' }}>
+            Register as a normal customer to rate and review stores
           </p>
         </div>
 
@@ -90,13 +88,13 @@ export default function RegisterPage({ setCurrentView }) {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Jonathan Alexander Sterling"
+                placeholder="e.g. Aarav Rameshwar Sharma"
                 required
                 style={{ paddingLeft: '2.3rem' }}
               />
               <User
                 size={16}
-                style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}
+                style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
               />
             </div>
             <div className="form-hint">Length must be between 20 and 60 characters.</div>
@@ -109,13 +107,13 @@ export default function RegisterPage({ setCurrentView }) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="user@example.com"
+                placeholder="aarav.sharma@example.com"
                 required
                 style={{ paddingLeft: '2.3rem' }}
               />
               <Mail
                 size={16}
-                style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}
+                style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
               />
             </div>
           </div>
@@ -131,14 +129,14 @@ export default function RegisterPage({ setCurrentView }) {
               <textarea
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Enter your street address, city, state, postal code..."
+                placeholder="e.g. Shop 12, FC Road, Shivajinagar, Pune, Maharashtra 411005"
                 rows={2}
                 required
                 style={{ paddingLeft: '2.3rem' }}
               />
               <MapPin
                 size={16}
-                style={{ position: 'absolute', left: '0.85rem', top: '14px', color: '#6b7280' }}
+                style={{ position: 'absolute', left: '0.85rem', top: '14px', color: 'var(--text-dim)' }}
               />
             </div>
           </div>
@@ -161,37 +159,36 @@ export default function RegisterPage({ setCurrentView }) {
               />
               <KeyRound
                 size={16}
-                style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}
+                style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
               />
             </div>
           </div>
 
-          {/* Real-time Password Rules Checklist */}
           <div
             style={{
               padding: '0.85rem 1rem',
-              background: 'rgba(255, 255, 255, 0.03)',
-              borderRadius: '10px',
+              backgroundColor: 'var(--bg-subtle)',
+              borderRadius: 'var(--radius-sm)',
               border: '1px solid var(--border-color)',
-              fontSize: '0.8rem',
+              fontSize: '0.8125rem',
               marginBottom: '1.25rem',
               display: 'flex',
               flexDirection: 'column',
               gap: '0.35rem',
             }}
           >
-            <div style={{ fontWeight: 600, color: '#9ca3af', marginBottom: '0.2rem' }}>
-              Required Password Rules:
+            <div style={{ fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.2rem' }}>
+              Password Requirements:
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasValidLength ? '#10b981' : '#9ca3af' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasValidLength ? 'var(--success)' : 'var(--text-dim)' }}>
               {hasValidLength ? <Check size={14} /> : <AlertCircle size={14} />}
               <span>8 to 16 characters</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasUppercase ? '#10b981' : '#9ca3af' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasUppercase ? 'var(--success)' : 'var(--text-dim)' }}>
               {hasUppercase ? <Check size={14} /> : <AlertCircle size={14} />}
               <span>At least one uppercase letter (A-Z)</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasSpecialChar ? '#10b981' : '#9ca3af' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasSpecialChar ? 'var(--success)' : 'var(--text-dim)' }}>
               {hasSpecialChar ? <Check size={14} /> : <AlertCircle size={14} />}
               <span>At least one special character (!@#$%^&* etc.)</span>
             </div>
@@ -201,18 +198,18 @@ export default function RegisterPage({ setCurrentView }) {
             type="submit"
             className="btn btn-primary"
             disabled={!isFormValid || loading}
-            style={{ width: '100%', padding: '0.75rem' }}
+            style={{ width: '100%', padding: '0.65rem' }}
           >
-            <UserPlus size={18} />
+            <UserPlus size={16} />
             <span>{loading ? 'Creating Account...' : 'Register Account'}</span>
           </button>
         </form>
 
-        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: '#9ca3af' }}>
+        <div style={{ marginTop: '1.25rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
           Already have an account?{' '}
           <button
             onClick={() => setCurrentView('login')}
-            style={{ background: 'none', border: 'none', color: '#818cf8', fontWeight: 600, cursor: 'pointer' }}
+            style={{ background: 'none', border: 'none', color: 'var(--accent)', fontWeight: 600, cursor: 'pointer' }}
           >
             Sign in
           </button>

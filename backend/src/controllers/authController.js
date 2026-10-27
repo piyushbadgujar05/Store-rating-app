@@ -19,12 +19,10 @@ function createToken(user) {
   );
 }
 
-// Public user registration - always assigns USER role
 async function register(req, res, next) {
   try {
     const { name, email, address, password } = req.body;
 
-    // Validate inputs
     const checkName = validateName(name);
     if (!checkName.valid) {
       return res.status(400).json({ success: false, message: checkName.message });
@@ -45,7 +43,6 @@ async function register(req, res, next) {
       return res.status(400).json({ success: false, message: checkPass.message });
     }
 
-    // Check for existing account
     const { rows: existingUsers } = await db.query(
       'SELECT id FROM users WHERE LOWER(email) = LOWER($1)',
       [checkEmail.value]
@@ -58,11 +55,9 @@ async function register(req, res, next) {
       });
     }
 
-    // Hash password with bcrypt
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
 
-    // Save user with default USER role
     const { rows } = await db.query(
       `INSERT INTO users (name, email, address, password_hash, role)
        VALUES ($1, $2, $3, $4, 'USER')
@@ -84,7 +79,6 @@ async function register(req, res, next) {
   }
 }
 
-// Single sign-in for all three roles
 async function login(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -121,7 +115,6 @@ async function login(req, res, next) {
 
     const token = createToken(account);
 
-    // Exclude password_hash from response
     const profile = {
       id: account.id,
       name: account.name,
@@ -142,7 +135,6 @@ async function login(req, res, next) {
   }
 }
 
-// Client-side logout endpoint
 async function logout(req, res) {
   return res.status(200).json({
     success: true,
@@ -150,7 +142,6 @@ async function logout(req, res) {
   });
 }
 
-// Get logged-in user profile
 async function getMe(req, res) {
   return res.status(200).json({
     success: true,
@@ -158,7 +149,6 @@ async function getMe(req, res) {
   });
 }
 
-// Update password after authenticating current password
 async function changePassword(req, res, next) {
   try {
     const { currentPassword, newPassword } = req.body;

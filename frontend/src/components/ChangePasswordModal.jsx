@@ -15,7 +15,6 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  // Validation rules
   const hasValidLength = newPassword.length >= 8 && newPassword.length <= 16;
   const hasUppercase = /[A-Z]/.test(newPassword);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_\-\\\/\[\]~`+=]/.test(newPassword);
@@ -82,36 +81,35 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
           />
         </div>
 
-        {/* Live Password Rules Feedback */}
         <div
           style={{
             padding: '0.85rem 1rem',
-            background: 'rgba(255, 255, 255, 0.03)',
-            borderRadius: '10px',
+            backgroundColor: 'var(--bg-subtle)',
+            borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-color)',
-            fontSize: '0.8rem',
+            fontSize: '0.8125rem',
             marginBottom: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.35rem',
           }}
         >
-          <div style={{ fontWeight: 600, color: '#9ca3af', marginBottom: '0.2rem' }}>
+          <div style={{ fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.2rem' }}>
             Password Security Requirements:
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasValidLength ? '#10b981' : '#9ca3af' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasValidLength ? 'var(--success)' : 'var(--text-dim)' }}>
             {hasValidLength ? <Check size={14} /> : <AlertCircle size={14} />}
             <span>Length: 8 to 16 characters</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasUppercase ? '#10b981' : '#9ca3af' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasUppercase ? 'var(--success)' : 'var(--text-dim)' }}>
             {hasUppercase ? <Check size={14} /> : <AlertCircle size={14} />}
             <span>At least one uppercase letter (A-Z)</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasSpecialChar ? '#10b981' : '#9ca3af' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasSpecialChar ? 'var(--success)' : 'var(--text-dim)' }}>
             {hasSpecialChar ? <Check size={14} /> : <AlertCircle size={14} />}
             <span>At least one special character (!@#$%^&* etc.)</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: passwordsMatch ? '#10b981' : '#9ca3af' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: passwordsMatch ? 'var(--success)' : 'var(--text-dim)' }}>
             {passwordsMatch ? <Check size={14} /> : <AlertCircle size={14} />}
             <span>Passwords match</span>
           </div>

@@ -1,5 +1,3 @@
-// API Client with automatic Authorization header and error handling
-
 const API_BASE = '/api';
 
 export async function apiRequest(endpoint, options = {}) {
@@ -21,7 +19,6 @@ export async function apiRequest(endpoint, options = {}) {
 
     if (!response.ok) {
       if (response.status === 401 && token) {
-        // Token expired or invalid
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.dispatchEvent(new Event('auth-expired'));

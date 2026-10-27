@@ -26,7 +26,6 @@ export function AuthProvider({ children }) {
             localStorage.setItem('user', JSON.stringify(res.user));
           }
         } catch {
-          // Token invalid
           setUser(null);
           setToken(null);
           localStorage.removeItem('token');
@@ -83,7 +82,6 @@ export function AuthProvider({ children }) {
         await apiRequest('/auth/logout', { method: 'POST' });
       }
     } catch {
-      // Ignore network errors on logout
     } finally {
       setUser(null);
       setToken(null);

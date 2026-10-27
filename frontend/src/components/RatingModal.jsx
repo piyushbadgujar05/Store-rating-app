@@ -58,52 +58,52 @@ export default function RatingModal({ isOpen, onClose, store, onRatingUpdated })
       maxWidth="480px"
     >
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '0.85rem', alignItems: 'center' }}>
+        <div style={{ marginBottom: '1.25rem', display: 'flex', gap: '0.85rem', alignItems: 'center' }}>
           <div
             style={{
-              width: '46px',
-              height: '46px',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2))',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              width: '42px',
+              height: '42px',
+              borderRadius: 'var(--radius-sm)',
+              backgroundColor: 'var(--bg-subtle)',
+              border: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#a5b4fc',
+              color: 'var(--accent)',
             }}
           >
-            <Store size={24} />
+            <Store size={22} />
           </div>
           <div>
-            <h4 style={{ fontSize: '1.05rem', color: '#ffffff' }}>{store.name}</h4>
-            <p style={{ fontSize: '0.825rem', color: '#9ca3af' }}>{store.address}</p>
+            <h4 style={{ fontSize: '1rem', color: 'var(--text-main)', fontWeight: 600 }}>{store.name}</h4>
+            <p style={{ fontSize: '0.8125rem', color: 'var(--text-dim)' }}>{store.address}</p>
           </div>
         </div>
 
         <div
           style={{
             padding: '1.25rem',
-            background: 'rgba(255, 255, 255, 0.03)',
-            borderRadius: '12px',
+            backgroundColor: 'var(--bg-subtle)',
+            borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-color)',
             textAlign: 'center',
-            marginBottom: '1.5rem',
+            marginBottom: '1.25rem',
           }}
         >
-          <div style={{ fontSize: '0.85rem', color: '#9ca3af', marginBottom: '0.75rem' }}>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.75rem', fontWeight: 500 }}>
             Select your rating (1 to 5 Stars):
           </div>
 
           <StarRating
             value={selectedRating}
             onChange={(val) => setSelectedRating(val)}
-            size={34}
+            size={32}
             showLabel={true}
           />
 
           {isModifying && (
-            <div style={{ marginTop: '0.85rem', fontSize: '0.8rem', color: '#9ca3af' }}>
-              Your current saved rating: <strong style={{ color: '#f59e0b' }}>{store.my_rating} Stars</strong>
+            <div style={{ marginTop: '0.75rem', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
+              Current submitted rating: <strong style={{ color: '#b45309' }}>{store.my_rating} Stars</strong>
             </div>
           )}
         </div>

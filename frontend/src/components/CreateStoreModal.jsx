@@ -80,7 +80,7 @@ export default function CreateStoreModal({ isOpen, onClose, onStoreCreated }) {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Downtown Electronics Flagship Store"
+            placeholder="e.g. Sahyadri Grocery Mart & Provisions"
             required
           />
           <div className="form-hint">Must be between 20 and 60 characters.</div>
@@ -92,7 +92,7 @@ export default function CreateStoreModal({ isOpen, onClose, onStoreCreated }) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="store.contact@domain.com"
+            placeholder="sahyadri.mart@example.com"
             required
           />
         </div>
@@ -107,7 +107,7 @@ export default function CreateStoreModal({ isOpen, onClose, onStoreCreated }) {
           <textarea
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            placeholder="Street address, city, state, zip code..."
+            placeholder="e.g. Shop 12, FC Road, Shivajinagar, Pune, Maharashtra 411005"
             rows={3}
             required
           />

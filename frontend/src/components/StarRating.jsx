@@ -73,9 +73,8 @@ export default function StarRating({
                 size={size}
                 className={`star-icon ${isFilled ? 'filled' : 'empty'} ${!readOnly ? 'interactive' : ''}`}
                 style={{
-                  fill: isFilled ? '#f59e0b' : 'transparent',
-                  color: isFilled ? '#f59e0b' : 'rgba(255, 255, 255, 0.25)',
-                  filter: isFilled ? 'drop-shadow(0 0 6px rgba(245, 158, 11, 0.4))' : 'none',
+                  fill: isFilled ? '#d97706' : 'transparent',
+                  color: isFilled ? '#d97706' : '#cbd5e1',
                 }}
               />
             </button>
@@ -84,19 +83,19 @@ export default function StarRating({
       </div>
 
       {showLabel && !readOnly && hoverValue > 0 && (
-        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#f59e0b' }}>
+        <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#b45309' }}>
           {hoverValue} — {RATING_LABELS[hoverValue]}
         </span>
       )}
 
       {showLabel && readOnly && value > 0 && (
-        <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#f3f4f6' }}>
+        <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)' }}>
           {Number(value).toFixed(1)}
         </span>
       )}
 
       {showCount !== null && (
-        <span style={{ fontSize: '0.8rem', color: '#9ca3af' }}>
+        <span style={{ fontSize: '0.8125rem', color: 'var(--text-dim)' }}>
           ({showCount} {showCount === 1 ? 'rating' : 'ratings'})
         </span>
       )}

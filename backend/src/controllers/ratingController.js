@@ -1,7 +1,6 @@
 const db = require('../config/db');
-const { validateRating } = require('../utils/validators');
+const { validateRating, validateId } = require('../utils/validators');
 
-// Helper to fetch the latest overall store average and the user's rating
 async function getStoreSummary(storeId, userId) {
   const { rows } = await db.query(
     `SELECT 
@@ -18,14 +17,14 @@ async function getStoreSummary(storeId, userId) {
   return rows[0];
 }
 
-// Submit a rating (creates new or updates existing)
 async function submitRating(req, res, next) {
   try {
     const { storeId, rating } = req.body;
     const userId = req.user.id;
 
-    if (!storeId) {
-      return res.status(400).json({ success: false, message: 'storeId is required.' });
+    const idCheck = validateId(storeId, 'Store ID');
+    if (!idCheck.valid) {
+      return res.status(400).json({ success: false, message: idCheck.message });
     }
 
     const check = validateRating(rating);
@@ -33,13 +32,11 @@ async function submitRating(req, res, next) {
       return res.status(400).json({ success: false, message: check.message });
     }
 
-    // Make sure the store exists
-    const { rows: storeRows } = await db.query('SELECT id FROM stores WHERE id = $1', [storeId]);
+    const { rows: storeRows } = await db.query('SELECT id FROM stores WHERE id = $1', [idCheck.value]);
     if (storeRows.length === 0) {
       return res.status(404).json({ success: false, message: 'Store not found.' });
     }
 
-    // Insert or update rating if already submitted by this user
     const upsertSql = `
       INSERT INTO ratings (user_id, store_id, rating, updated_at)
       VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
@@ -48,8 +45,8 @@ async function submitRating(req, res, next) {
       RETURNING id, user_id, store_id, rating, created_at, updated_at
     `;
 
-    const { rows } = await db.query(upsertSql, [userId, storeId, check.value]);
-    const summary = await getStoreSummary(storeId, userId);
+    const { rows } = await db.query(upsertSql, [userId, idCheck.value, check.value]);
+    const summary = await getStoreSummary(idCheck.value, userId);
 
     res.status(200).json({
       success: true,
@@ -62,12 +59,16 @@ async function submitRating(req, res, next) {
   }
 }
 
-// Modify an already submitted rating
 async function updateRating(req, res, next) {
   try {
     const { storeId } = req.params;
     const { rating } = req.body;
     const userId = req.user.id;
+
+    const idCheck = validateId(storeId, 'Store ID');
+    if (!idCheck.valid) {
+      return res.status(400).json({ success: false, message: idCheck.message });
+    }
 
     const check = validateRating(rating);
     if (!check.valid) {
@@ -76,7 +77,7 @@ async function updateRating(req, res, next) {
 
     const { rows: existing } = await db.query(
       'SELECT id FROM ratings WHERE user_id = $1 AND store_id = $2',
-      [userId, storeId]
+      [userId, idCheck.value]
     );
 
     if (existing.length === 0) {
@@ -93,8 +94,8 @@ async function updateRating(req, res, next) {
       RETURNING id, user_id, store_id, rating, updated_at
     `;
 
-    const { rows } = await db.query(updateSql, [check.value, userId, storeId]);
-    const summary = await getStoreSummary(storeId, userId);
+    const { rows } = await db.query(updateSql, [check.value, userId, idCheck.value]);
+    const summary = await getStoreSummary(idCheck.value, userId);
 
     res.status(200).json({
       success: true,
@@ -107,15 +108,19 @@ async function updateRating(req, res, next) {
   }
 }
 
-// Check if user already rated this store
 async function getUserStoreRating(req, res, next) {
   try {
     const { storeId } = req.params;
     const userId = req.user.id;
 
+    const idCheck = validateId(storeId, 'Store ID');
+    if (!idCheck.valid) {
+      return res.status(400).json({ success: false, message: idCheck.message });
+    }
+
     const { rows } = await db.query(
       'SELECT rating, created_at, updated_at FROM ratings WHERE user_id = $1 AND store_id = $2',
-      [userId, storeId]
+      [userId, idCheck.value]
     );
 
     if (rows.length === 0) {

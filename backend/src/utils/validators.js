@@ -1,5 +1,3 @@
-// Input validation utilities based on project requirements
-
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const specialCharsRegex = /[!@#$%^&*(),.?":{}|<>_\-\\\/\[\]~`+=]/;
 const uppercaseRegex = /[A-Z]/;
@@ -82,10 +80,35 @@ function validateRating(rating) {
   return { valid: true, value: parsed };
 }
 
+function validateId(id, fieldName = 'ID') {
+  if (id === null || id === undefined || id === '') {
+    return { valid: false, message: `${fieldName} is required.` };
+  }
+  const parsed = Number(id);
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    return { valid: false, message: `${fieldName} must be a positive integer.` };
+  }
+  return { valid: true, value: parsed };
+}
+
+function validateRole(role) {
+  const allowedRoles = ['ADMIN', 'USER', 'STORE_OWNER'];
+  const normalized = String(role || '').toUpperCase();
+  if (!allowedRoles.includes(normalized)) {
+    return {
+      valid: false,
+      message: `Invalid role. Allowed values: ${allowedRoles.join(', ')}`,
+    };
+  }
+  return { valid: true, value: normalized };
+}
+
 module.exports = {
   validateName,
   validateAddress,
   validateEmail,
   validatePassword,
   validateRating,
+  validateId,
+  validateRole,
 };

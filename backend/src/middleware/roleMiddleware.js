@@ -1,5 +1,3 @@
-// Role-based access control middleware
-
 function requireRole(...allowedRoles) {
   return (req, res, next) => {
     if (!req.user) {

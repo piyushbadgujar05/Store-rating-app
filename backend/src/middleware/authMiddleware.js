@@ -17,7 +17,6 @@ async function authenticateToken(req, res, next) {
   try {
     const payload = jwt.verify(token, JWT_SECRET);
     
-    // Check if the user still exists in the database
     const { rows } = await db.query(
       'SELECT id, name, email, address, role FROM users WHERE id = $1',
       [payload.userId]
@@ -40,7 +39,6 @@ async function authenticateToken(req, res, next) {
   }
 }
 
-// Allows requests through whether logged in or not; attaches user if token is valid
 async function optionalAuth(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];

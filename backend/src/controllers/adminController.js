@@ -5,9 +5,10 @@ const {
   validateAddress,
   validateEmail,
   validatePassword,
+  validateId,
+  validateRole,
 } = require('../utils/validators');
 
-// Map client-side sort keys to safe SQL column names
 const STORE_SORT_FIELDS = {
   name: 's.name',
   email: 's.email',
@@ -25,7 +26,6 @@ const USER_SORT_FIELDS = {
   created_at: 'u.created_at',
 };
 
-// Summary metrics for the admin dashboard
 async function getDashboardStats(req, res, next) {
   try {
     const userStatsQuery = db.query(`
@@ -64,7 +64,6 @@ async function getDashboardStats(req, res, next) {
   }
 }
 
-// Add a new store and optionally assign a store owner
 async function createStore(req, res, next) {
   try {
     const { name, email, address, ownerId } = req.body;
@@ -84,10 +83,13 @@ async function createStore(req, res, next) {
       return res.status(400).json({ success: false, message: addressCheck.message });
     }
 
-    // If an owner was selected, ensure that user exists and actually has the STORE_OWNER role
     let assignedOwnerId = null;
-    if (ownerId) {
-      const { rows } = await db.query('SELECT id, role, name FROM users WHERE id = $1', [ownerId]);
+    if (ownerId !== undefined && ownerId !== null && ownerId !== '') {
+      const ownerIdCheck = validateId(ownerId, 'Owner ID');
+      if (!ownerIdCheck.valid) {
+        return res.status(400).json({ success: false, message: ownerIdCheck.message });
+      }
+      const { rows } = await db.query('SELECT id, role, name FROM users WHERE id = $1', [ownerIdCheck.value]);
       if (rows.length === 0) {
         return res.status(400).json({ success: false, message: 'Selected store owner was not found.' });
       }
@@ -100,7 +102,6 @@ async function createStore(req, res, next) {
       assignedOwnerId = rows[0].id;
     }
 
-    // Check duplicate store email
     const { rows: existingStore } = await db.query('SELECT id FROM stores WHERE LOWER(email) = LOWER($1)', [emailCheck.value]);
     if (existingStore.length > 0) {
       return res.status(409).json({ success: false, message: 'A store with this email already exists.' });
@@ -123,7 +124,6 @@ async function createStore(req, res, next) {
   }
 }
 
-// Add user with arbitrary role (ADMIN, USER, STORE_OWNER)
 async function createUser(req, res, next) {
   try {
     const { name, email, address, password, role } = req.body;
@@ -148,16 +148,15 @@ async function createUser(req, res, next) {
       return res.status(400).json({ success: false, message: passCheck.message });
     }
 
-    const allowedRoles = ['ADMIN', 'USER', 'STORE_OWNER'];
-    const assignedRole = String(role || 'USER').toUpperCase();
-    if (!allowedRoles.includes(assignedRole)) {
+    const roleCheck = validateRole(role || 'USER');
+    if (!roleCheck.valid) {
       return res.status(400).json({
         success: false,
-        message: `Invalid role. Allowed values: ${allowedRoles.join(', ')}`,
+        message: roleCheck.message,
       });
     }
+    const assignedRole = roleCheck.value;
 
-    // Check duplicate email
     const { rows: existingUser } = await db.query('SELECT id FROM users WHERE LOWER(email) = LOWER($1)', [emailCheck.value]);
     if (existingUser.length > 0) {
       return res.status(409).json({
@@ -186,7 +185,6 @@ async function createUser(req, res, next) {
   }
 }
 
-// Search, filter, sort, and paginate stores for admin view
 async function listStores(req, res, next) {
   try {
     const {
@@ -234,12 +232,10 @@ async function listStores(req, res, next) {
 
     const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
-    // Total count for pagination
     const countSql = `SELECT COUNT(*)::int AS total FROM stores s ${where}`;
     const countRes = await db.query(countSql, params);
     const totalRecords = countRes.rows[0].total;
 
-    // Fetch stores joined with owner info and rating averages
     const querySql = `
       SELECT 
         s.id,
@@ -279,7 +275,6 @@ async function listStores(req, res, next) {
   }
 }
 
-// List users with role/text filters, sorting, and pagination
 async function listUsers(req, res, next) {
   try {
     const {
@@ -369,15 +364,18 @@ async function listUsers(req, res, next) {
   }
 }
 
-// User details inspection; if user is a store owner, attach their stores and ratings
 async function getUserDetails(req, res, next) {
   try {
     const { id } = req.params;
+    const idCheck = validateId(id, 'User ID');
+    if (!idCheck.valid) {
+      return res.status(400).json({ success: false, message: idCheck.message });
+    }
 
     const { rows } = await db.query(
       `SELECT id, name, email, address, role, created_at, updated_at
        FROM users WHERE id = $1`,
-      [id]
+      [idCheck.value]
     );
 
     if (rows.length === 0) {
@@ -418,7 +416,6 @@ async function getUserDetails(req, res, next) {
   }
 }
 
-// Helper to populate owner dropdown options in the create store form
 async function getStoreOwners(req, res, next) {
   try {
     const { rows } = await db.query(

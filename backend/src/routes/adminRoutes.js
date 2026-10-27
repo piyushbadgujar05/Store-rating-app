@@ -4,7 +4,6 @@ const adminController = require('../controllers/adminController');
 const { authenticateToken } = require('../middleware/authMiddleware');
 const { requireRole } = require('../middleware/roleMiddleware');
 
-// Protect all admin routes with authentication and ADMIN role check
 router.use(authenticateToken, requireRole('ADMIN'));
 
 router.get('/dashboard', adminController.getDashboardStats);

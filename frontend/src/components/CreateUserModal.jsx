@@ -84,7 +84,7 @@ export default function CreateUserModal({ isOpen, onClose, onUserCreated }) {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Jonathan Alexander Sterling"
+            placeholder="e.g. Priya Sudhakar Deshmukh"
             required
           />
           <div className="form-hint">Must be between 20 and 60 characters.</div>
@@ -96,7 +96,7 @@ export default function CreateUserModal({ isOpen, onClose, onUserCreated }) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="user.account@example.com"
+            placeholder="priya.deshmukh@example.com"
             required
           />
         </div>
@@ -111,7 +111,7 @@ export default function CreateUserModal({ isOpen, onClose, onUserCreated }) {
           <textarea
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            placeholder="Residential or business address..."
+            placeholder="e.g. Shop 4, Baner Road, Baner, Pune, Maharashtra 411045"
             rows={2}
             required
           />
@@ -121,7 +121,7 @@ export default function CreateUserModal({ isOpen, onClose, onUserCreated }) {
           <label className="form-label">
             <span>Password</span>
             <span className={`form-counter ${password.length > 16 ? 'limit-err' : ''}`}>
-              {password.length} / 16
+              {password.length} / 16 (min 8)
             </span>
           </label>
           <input
@@ -133,12 +133,11 @@ export default function CreateUserModal({ isOpen, onClose, onUserCreated }) {
           />
         </div>
 
-        {/* Live Password Rules Feedback */}
         <div
           style={{
             padding: '0.75rem 1rem',
-            background: 'rgba(255, 255, 255, 0.03)',
-            borderRadius: '8px',
+            backgroundColor: 'var(--bg-subtle)',
+            borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-color)',
             fontSize: '0.78rem',
             marginBottom: '1.25rem',
@@ -147,15 +146,15 @@ export default function CreateUserModal({ isOpen, onClose, onUserCreated }) {
             gap: '0.3rem',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasValidLength ? '#10b981' : '#9ca3af' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasValidLength ? 'var(--success)' : 'var(--text-dim)' }}>
             {hasValidLength ? <Check size={13} /> : <AlertCircle size={13} />}
             <span>8 to 16 characters</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasUppercase ? '#10b981' : '#9ca3af' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasUppercase ? 'var(--success)' : 'var(--text-dim)' }}>
             {hasUppercase ? <Check size={13} /> : <AlertCircle size={13} />}
             <span>At least one uppercase letter (A-Z)</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasSpecialChar ? '#10b981' : '#9ca3af' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasSpecialChar ? 'var(--success)' : 'var(--text-dim)' }}>
             {hasSpecialChar ? <Check size={13} /> : <AlertCircle size={13} />}
             <span>At least one special character (!@#$%^&* etc.)</span>
           </div>

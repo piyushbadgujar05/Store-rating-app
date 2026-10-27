@@ -1,9 +1,7 @@
--- Drop tables if they exist in reverse order of dependencies
 DROP TABLE IF EXISTS ratings CASCADE;
 DROP TABLE IF EXISTS stores CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
--- Users table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(60) NOT NULL CONSTRAINT chk_user_name_len CHECK (LENGTH(TRIM(name)) >= 20 AND LENGTH(TRIM(name)) <= 60),
@@ -15,7 +13,6 @@ CREATE TABLE users (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Stores table
 CREATE TABLE stores (
     id SERIAL PRIMARY KEY,
     name VARCHAR(60) NOT NULL CONSTRAINT chk_store_name_len CHECK (LENGTH(TRIM(name)) >= 20 AND LENGTH(TRIM(name)) <= 60),
@@ -26,7 +23,6 @@ CREATE TABLE stores (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Ratings table
 CREATE TABLE ratings (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -37,12 +33,13 @@ CREATE TABLE ratings (
     CONSTRAINT uq_user_store_rating UNIQUE (user_id, store_id)
 );
 
--- Indexes for frequent searching, filtering, and joining
 CREATE INDEX idx_users_email ON users(email);
+CREATE UNIQUE INDEX idx_users_email_lower ON users(LOWER(email));
 CREATE INDEX idx_users_role ON users(role);
 CREATE INDEX idx_users_name ON users(name);
 CREATE INDEX idx_stores_name ON stores(name);
 CREATE INDEX idx_stores_email ON stores(email);
+CREATE UNIQUE INDEX idx_stores_email_lower ON stores(LOWER(email));
 CREATE INDEX idx_stores_address ON stores(address);
 CREATE INDEX idx_stores_owner ON stores(owner_id);
 CREATE INDEX idx_ratings_store ON ratings(store_id);
